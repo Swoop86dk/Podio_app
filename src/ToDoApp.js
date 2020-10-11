@@ -152,6 +152,14 @@ var ToDoApp = window.ToDoApp = (function() {
       .catch(reject);
     })
     }
+
+  
+  ToDoApp.prototype.sendPushMessage = function() {
+    var self = this;
+    return new Promise(function(resolve, reject) {
+      self.podio.request('')
+    })
+  }
   
 
 
@@ -209,6 +217,7 @@ var ToDoApp = window.ToDoApp = (function() {
     // Save the task item
     return podio.request('put', 'item/' + taskId, taskData);
   };
+
 
   ToDoApp.prototype.drawTasks = function() {
 
