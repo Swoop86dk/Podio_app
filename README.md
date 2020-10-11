@@ -17,7 +17,8 @@ Option 1: (With Visual Studio Code IDE and Live Server library installed!)
 
 1. open up a terminal and cd to the project folders main.
 2. click the index.html file inside the project.
-3. right click anywhere on the code page and select the option to "Open with Live Server"
+3. Enter the correct values for client_id and client_secret on line 35.
+4. right click anywhere on the code page and select the option to "Open with Live Server"
 The Live Server will start up and run at ```http://localhost:5500```
 
 ## App running:
