@@ -9,6 +9,8 @@
 <script src="lib/podio-js.js"></script>
 <script src="lib/jquery-1.11.3.min.js"></script>
 <script src="lib/lodash.min.js"></script>
+<script src="http://alexschneider.github.io/pushbullet-js/pushbullet.min.js" type="text/javascript"></script>
+<script src="lib/pushbullet.js"></script>
 <script type="application/javascript">
 
   var SessionStore = {
@@ -56,17 +58,13 @@
     var app = new ToDoApp({
       container: '#todo-app',
       listsTemplateId: 25242224, // Your lists template ID
-      tasksTemplateId: 00000000, // Your tasks template ID
       podio: podio
     });
 
     // Load and render initial data
     app.setUpWorkspace()
-    .then(app.loadContacts.bind(app))
     .then(app.loadLists.bind(app))
-    .then(app.loadTasks.bind(app))
     .then(app.drawLists.bind(app))
-    .then(app.drawTasks.bind(app))
     .catch(console.error.bind(console));
   };
 
