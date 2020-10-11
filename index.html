@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nofipa assignment</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<script src="lib/podio-js.js"></script>
+<script src="lib/jquery-1.11.3.min.js"></script>
+<script src="lib/lodash.min.js"></script>
+<script src="src/ToDoApp.js"></script>
+<script type="application/javascript">
+
+  var SessionStore = {
+    get: function(authType, callback) {
+
+      var podioOAuth = localStorage.getItem('podioOAuth');
+      if (podioOAuth) {
+        podioOAuth = JSON.parse(podioOAuth);
+      }
+      callback(podioOAuth || {});
+    },
+    set: function(podioOAuth, authType) {
+
+      localStorage.setItem('podioOAuth', JSON.stringify(podioOAuth));
+      location.reload();
+    }
+  };
+
+  // TODO: Remove sensitive data fields!
+  var podio = new PodioJS({
+    authType: 'password',
+    clientId: 'testapikey-m6l6mr',
+    clientSecret: 'cnbY1DdLoOuQw5baGXLGSxheZnTv08uPhkh2KRluUVq6qGi0pXV5IoHpKxNl3GFH'
+  }, {
+    sessionStore: SessionStore
+  });
+
+  var onAuthSubmit = function() {
+
+    var values = $('#authForm').serializeArray();
+    var email = values[0].value;
+    var password = values[1].value;
+
+    // Will refresh page on success (done by the SessionStore).
+    // In case of errors, we 'pipe' directly to alert()
+    podio.authenticateWithCredentials(email, password, alert);
+
+    return false;
+  };
+
+  var initializeApp = function() {
+    
+    $('#login-container').hide();
+
+    var app = new ToDoApp({
+      container: '#todo-app',
+      listsTemplateId: 25242224, // Your lists template ID
+      tasksTemplateId: 00000000, // Your tasks template ID
+      podio: podio
+    });
+
+    // Load and render initial data
+    app.setUpWorkspace()
+    .then(app.loadContacts.bind(app))
+    .then(app.loadLists.bind(app))
+    .then(app.loadTasks.bind(app))
+    .then(app.drawLists.bind(app))
+    .then(app.drawTasks.bind(app))
+    .catch(console.error.bind(console));
+  };
+
+  // Initialize the application if the user is logged in
+  $(function() {
+    podio.isAuthenticated().then(initializeApp);
+  });
+</script>
+
+<body>
+  <div id="login-container" class="container"> <!-- Unnecessary tag -->
+    <div class="form">
+        <div class="header">
+          Login
+        </div>
+        <div class="body">
+          <form id="authForm" onsubmit="return onAuthSubmit()">
+            <input type="text" name="email" placeholder="Brugernavn">
+            <input type="password" name="password" placeholder="Adgangskode">
+            <input type="submit">
+          </form>
+        </div>
+      </div>
+  </div>
+  <div id="todo-app"></div>
+
+</body>
+</html>
